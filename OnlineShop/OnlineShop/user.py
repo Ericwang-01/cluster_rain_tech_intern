@@ -5,7 +5,7 @@
 
 '''
 import pymysql
-from config.config import *
+from config.config import config_info
 from database_connection import DatabaseConnection
 
 
@@ -16,12 +16,7 @@ class User(object):
         self.current_user = None
 
     def create_conn(self):
-        self.db = pymysql.connect(
-            user=USER,
-            password=PASSWORD,
-            host=HOST,
-            database=DATABASE,
-        )
+        self.db = pymysql.connect(**config_info)
 
     def reg(self):
         self.create_conn()
@@ -41,8 +36,8 @@ class User(object):
         sql = """SELECT id FROM user WHERE tel = %s and password = %s"""
         with self.db.cursor() as cur:
             cur.execute(sql, (tel, password))
-            id = cur.fetchone()[0]
-        self.current_user = id
+            user_id = cur.fetchone()[0]
+        self.current_user = user_id
         print(f"登录成功，当前用户id为{self.current_user}")
 
     def logout(self):
@@ -78,6 +73,6 @@ class User(object):
             print("请先登录")
 
 
-myuser = User()
-myuser.login()
-myuser.top_up()
+user1 = User()
+
+

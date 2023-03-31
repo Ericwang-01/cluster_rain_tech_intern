@@ -9,12 +9,10 @@ from item import Item
 
 
 class Cart:
-    connection = DatabaseConnection.get_connection(config_info)
+    db = DatabaseConnection.get_connection(config_info)
 
     def __init__(self):
         self.items = {}
-
-
         self.total_price = 0
 
     def add_item(self, item, quantity):
@@ -33,9 +31,9 @@ class Cart:
             item.stock -= quantity
 
             sql = """UPDATE item SET stock = %s WHERE id = %s"""
-            with self.connection.cursor() as cursor:
-                cursor.execute(sql, (item.stock, item.id))
-                self.connection.commit()
+            with self.db.cursor() as cursor:
+                cursor.execute(sql, (item.stock, item.item_id))
+                self.db.commit()
 
         else:
             self.items[item.name]['quantity'] += quantity
@@ -43,9 +41,9 @@ class Cart:
 
             connection = DatabaseConnection.get_connection(config_info)
             sql = """UPDATE item SET stock = %s WHERE id = %s"""
-            with self.connection.cursor() as cursor:
-                cursor.execute(sql, (item.stock, item.id))
-                self.connection.commit()
+            with self.db.cursor() as cursor:
+                cursor.execute(sql, (item.stock, item.item_id))
+                self.db.commit()
 
         self.total_price += item.price * quantity
         print(f"{quantity} units of '{item.name}' added to cart.")
@@ -58,9 +56,9 @@ class Cart:
             item.stock += remove_quantity
 
             sql = """UPDATE item SET stock = %s WHERE id = %s"""
-            with self.connection.cursor() as cursor:
+            with self.db.cursor() as cursor:
                 cursor.execute(sql, (item.stock, item.id))
-                self.connection.commit()
+                self.db.commit()
 
             self.total_price -= item.price * remove_quantity
             print(f"{remove_quantity} units of '{item.name}' removed from cart.")
@@ -70,9 +68,9 @@ class Cart:
             item.stock += remove_quantity
 
             sql = """UPDATE item SET stock = %s WHERE id = %s"""
-            with self.connection.cursor() as cursor:
-                cursor.execute(sql, (item.stock, item.id))
-                self.connection.commit()
+            with self.db.cursor() as cursor:
+                cursor.execute(sql, (item.stock, item.item_id))
+                self.db.commit()
 
             del self.items[remove_item_name]
             self.total_price -= item.price * remove_quantity
@@ -92,9 +90,9 @@ class Cart:
             print(f"Total price: {self.total_price:.2f} yuan")
             # 改user指定用户的balance
             sql = """UPDATE user SET balance = %s WHERE id = %s"""
-            with self.connection.cursor() as cursor:
+            with self.db.cursor() as cursor:
                 cursor.execute(sql, (self.total_price, 3))
-                self.connection.commit()
+                self.db.commit()
             # 清空items和total_price
             self.items.clear()
             self.total_price = 0
@@ -107,9 +105,9 @@ class Cart:
             item.stock += self.items[item_name]['quantity']
 
             sql = """UPDATE item SET stock = %s WHERE id = %s"""
-            with self.connection.cursor() as cursor:
+            with self.db.cursor() as cursor:
                 cursor.execute(sql, (item.stock, item.id))
-                self.connection.commit()
+                self.db.commit()
 
         self.items.clear()
         self.total_price = 0

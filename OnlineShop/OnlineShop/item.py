@@ -5,8 +5,8 @@ from database_connection import DatabaseConnection
 
 
 class Item:
-    def __init__(self, i_id, name, description, size, stock, price):
-        self.id = i_id
+    def __init__(self, item_id, name, description, size, stock, price):
+        self.item_id = item_id
         self.name = name
         self.description = description
         self.size = size
@@ -15,24 +15,24 @@ class Item:
 
     def add_item(self):
 
-        connection = DatabaseConnection.get_connection(config_info)
+        db = DatabaseConnection.get_connection(config_info)
 
         try:
-            with connection.cursor() as cursor:
+            with db.cursor() as cursor:
                 sql = "INSERT INTO item (name, description, size, stock, price) VALUES (%s, %s, %s, %s, %s)"
                 values = (self.name, self.description, self.size, self.stock, self.price)
                 cursor.execute(sql, values)
-                connection.commit()
+                db.commit()
                 print("Product added successfully.")
         finally:
-            connection.close()
+            db.close()
 
     @staticmethod
     def find_item(item_id):
-        connection = DatabaseConnection.get_connection(config_info)
+        bd = DatabaseConnection.get_connection(config_info)
 
         try:
-            with connection.cursor() as cursor:
+            with bd.cursor() as cursor:
                 sql = "SELECT * FROM item WHERE id = %s"
                 value = (item_id,)
                 cursor.execute(sql, value)
@@ -44,37 +44,38 @@ class Item:
                 print(f"Item with ID {item_id} not found in inventory.")
                 return None
         finally:
-            connection.close()
+
+            bd.close()
 
     @staticmethod
     def display_all_items():
-        connection = DatabaseConnection.get_connection(config_info)
+        db = DatabaseConnection.get_connection(config_info)
 
         try:
-            with connection.cursor() as cursor:
+            with db.cursor() as cursor:
                 sql = "SELECT * FROM item"
                 cursor.execute(sql)
                 result = cursor.fetchall()
 
                 for row in result:
                     item = Item(*row)
-                    print(row)
-                    print(*row)
+                    # print(row)
+                    # print(*row)
 
                     print(
-                        f"'Id':{item.id} {item.name}: {item.description} ({item.size}) - {item.price:.2f} yuan (stock: {item.stock})")
+                        f"'Id':{item.item_id} {item.name}: {item.description} ({item.size}) - {item.price:.2f} yuan (stock: {item.stock})")
         finally:
-            connection.close()
+            db.close()
 
 
 if __name__ == '__main__':
     # 创建商品实例
     product4 = Item(16, 'Product4', 'There is a description for Product4.', 'L', 1, 99.9, )
 
-    # 添加商品到数据库
-    product4.add_item()
-
-    #  根据商品id，查找该商品的所有信息
-    print(Item.find_item(16))
-    #  展示所有商品在购物车模块会用到
-    Item.display_all_items()
+    # # 添加商品到数据库
+    # product4.add_item()
+    #
+    # #  根据商品id，查找该商品的所有信息
+    # print(Item.find_item(16))
+    # #  展示所有商品在购物车模块会用到
+    # Item.display_all_items()
