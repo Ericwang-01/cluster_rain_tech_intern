@@ -1,6 +1,7 @@
 import pymysql
 
 
+# 使用单例设计模式，创建一个数据库链接类
 class DatabaseConnection(object):
     __instance = None
 

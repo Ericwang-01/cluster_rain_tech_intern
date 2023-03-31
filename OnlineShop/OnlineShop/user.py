@@ -78,9 +78,6 @@ class User(object):
             print("请先登录")
 
 
-
-
-
 myuser = User()
 myuser.login()
 myuser.top_up()
