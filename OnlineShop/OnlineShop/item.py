@@ -14,7 +14,6 @@ class Item:
         self.price = price
 
     def add_item(self):
-
         db = DatabaseConnection.get_connection(config_info)
 
         try:
@@ -59,9 +58,6 @@ class Item:
 
                 for row in result:
                     item = Item(*row)
-                    # print(row)
-                    # print(*row)
-
                     print(
                         f"'Id':{item.item_id} {item.name}: {item.description} ({item.size}) - {item.price:.2f} yuan (stock: {item.stock})")
         finally:

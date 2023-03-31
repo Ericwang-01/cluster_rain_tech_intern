@@ -38,8 +38,6 @@ class Cart:
         else:
             self.items[item.name]['quantity'] += quantity
             item.stock -= quantity
-
-            connection = DatabaseConnection.get_connection(config_info)
             sql = """UPDATE item SET stock = %s WHERE id = %s"""
             with self.db.cursor() as cursor:
                 cursor.execute(sql, (item.stock, item.item_id))
