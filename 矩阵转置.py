@@ -16,7 +16,7 @@ matrix = [
 
 # 输出原始矩阵
 for row in matrix:
-    print(row)
+    print(*row)
 
 # 转置矩阵
 transpose = []
@@ -29,4 +29,4 @@ for i in range(len(matrix[0])): #  进入col
 # 输出转置后的矩阵
 print('转置后:')
 for row in transpose:
-    print(row)
+    print(*row)
